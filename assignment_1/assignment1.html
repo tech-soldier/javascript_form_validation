@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Assignment 1 - Intermediate JS</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:500&display=swap" rel="stylesheet">
+	<style>
+
+		body {
+			background-color: #faf5f0;
+			font-family: 'Roboto', sans-serif;
+			color: #59524b;
+		}
+
+		h1 {
+			margin-left: 80px;
+			font-size: 28px;
+		}
+
+		div {
+			width: 30%;
+			margin-left: 50px;
+			text-align: left;
+			background-color: #eee;
+			padding: 20px 30px;
+			border-radius: 8px;
+		}
+
+		label {
+			display: block;
+			margin: 3px 0;
+			font-style: italic;
+		}
+
+		input, select {
+		  width: 100%;
+		  display: inline-block;
+		  border: 1px solid #bbb;
+		  border-radius: 4px;
+		  box-sizing: border-box;
+		  padding: 10px 15px;
+		  margin: 10px 0;
+		}
+
+		input[type=submit] {
+		  width: 100%;
+		  background-color: darkorange;
+		  color: #fff;
+		  cursor: pointer;
+		  padding: 10px 25px;
+		  margin: 7px 0;
+		  border: none;
+		  border-radius: 7px;
+		  font-size: 16px;
+		}
+
+		input[type=submit]:hover {
+		  opacity: 0.7;
+		}
+
+		span.required {
+			color: red;
+		}
+
+		h3 {
+			margin-left: 80px;
+			font-size: 17px;
+		}
+
+</style>
+</head>
+<body>
+  <h1>Form Validation With JS</h1>
+  <h3><span class="required">*</span> Required fields</h3>
+  <div id="form_container">
+	  <form onsubmit="return requiredCheck(this);" action="https://uwpace.ca/post.php" id="main_form" name="main_form" method="get" novalidate>
+	    <label for="name">First Name <span class="required">*</span></label>
+	    <input type="text" id="name" name="name" placeholder="Your name">
+
+	    <label for="last_name">Last Name <span class="required">*</span></label>
+	    <input type="text" id="last_name" name="last_name" placeholder="Your last name">
+
+	    <label for="email_address">E-mail <span class="required">*</span></label>
+	    <input type="email" id="email_address" name="email_address" placeholder="example@gmail.com">
+
+	    <label for="phone">Telephone number <span class="required">*</span></label>
+	    <input type="tel" id="phone" name="phone" placeholder="Ex. 204-555-1212">
+
+	    <label for="postal">Postal Code <span class="required">*</span></label>
+	    <input type="text" id="postal" name="postal" placeholder="Ex. R3C1Y4">
+
+	    <label for="url">Full URL</label>
+	    <input type="text" id="url" name="url" placeholder="Start with http://">
+
+	    <label for="age">Your Age</label>
+	    <input type="text" id="age" name="age" placeholder="Your age"> <!-- type is text to check if for validation works -->
+
+	    <input type="submit" value="Submit">
+	  </form>
+  </div>
+
+<script>
+
+	// function checks if the required form fieds are filled out
+	function requiredCheck(form) {
+
+		var myform  = document.main_form;  //storing the form into variable
+    var first_name = document.main_form.name.value; // accessing certain form fields by the input names
+    var last_name = document.main_form.last_name.value;
+    var email = document.main_form.email_address.value;
+    var phone_num = document.main_form.phone.value;
+    var postal_code = document.main_form.postal.value;
+    
+    var filled_out = true;
+
+    if ((first_name.length == 0) || (last_name.length == 0) || (email.length == 0) || (phone_num.length == 0) || (postal_code.length == 0)) {
+    	filled_out = false;
+    }
+
+    // running validation functions and assigning the return result to a variable
+    var num = checkNumber(myform); 
+    var email_address = checkEmail(myform);
+    var postal = checkPostal(myform);
+    var url = checkUrl(myform);
+    var user_age = checkAge(myform);
+
+    /* 
+    Below is the code that checks if the validation functions return false (don't pass validation), and if so, it prevents form from submitting and shows an alert message. Othervise, the form is submitted successfully. 
+    */
+    if(filled_out === false) {
+			alert('Please fill in all the required form fields');
+			return false; // do not submit form
+		} else if (num === false) {
+			alert('Phone number should contain 12 characters');
+			return false; // do not submit form
+		} else if (email_address === false) {
+			alert('Please enter a valid email address');
+			return false; // do not submit form
+		} else if (postal === false) {
+			alert('Postal code must contain 6 characters with no empty spaces');
+			return false; // do not submit form
+		} else if (url === false) {
+			alert('URL should start with "http://"');
+			return false; // do not submit form	
+		} else if (user_age === false) {
+			alert('Age should be a number');
+			return false; // do not submit form	
+		} else {
+		  return true; // submit form
+	  }
+	}
+
+	/*
+	Phone number validation function
+	It checks if it is exactly 12 characters long.
+	*/
+	function checkNumber(form) {
+
+		var phone_num = document.main_form.phone.value;
+
+    if ((phone_num.length < 12) || (phone_num.length > 12)) {
+      return false;
+    } else {
+		  return true; 
+	  }
+	}
+
+
+	/*
+	Email validation function
+	It checks if the position of '@' and '.' are correct .
+	*/
+
+	function checkEmail(form) {
+
+		var email = document.main_form.email_address.value;
+
+		var pos_at = email.indexOf('@');
+		var pos_dot = email.lastIndexOf('.'); // as email can contain '.' before '@' symbol, makes sence to use lastIndexOf
+
+
+    if ((pos_at === 1) || (pos_at > email.length - 3) || (pos_dot === 1) || (pos_dot > email.length - 3)){
+      return false;
+    } else {
+		  return true; 
+	  }
+	}
+
+	/*
+	Postal code validation function
+	It checks if the postal code contains 6 characters and no spaces.
+	*/
+
+	function checkPostal(form) {
+		var postal_code = document.main_form.postal.value;
+
+	  if ((postal_code.length !== 6) || (postal_code.indexOf(' ') !== -1)) {
+	  	return false;
+	  } else {
+	  	return true;
+	  }
+	}
+
+	/*
+	URL validation function.
+	Performs validation ONLY if filled out and checks if URL starts with "http://"
+	*/
+
+  function checkUrl(form) {
+  	var url = document.main_form.url.value;
+
+  	if (url.length > 0) {
+  		if (url.indexOf("http://", 0) == -1) { // includes() can be used here, not supported in IE.
+  			return false;
+  		} else {
+  			return true;
+  		}
+  	} else {
+  		return true;
+  	}
+  }
+
+  function checkAge(form) {
+  	var age = document.main_form.age.value;
+
+  	if (age.length > 0) {
+  		if (isNaN(age)) { 
+  			return false;
+  		} else {
+  			return true;
+  		}
+  	} else {
+  		return true;
+  	}
+  }
+  
+  </script>
+</body>
+</html>
