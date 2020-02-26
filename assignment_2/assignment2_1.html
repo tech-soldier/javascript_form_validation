@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Assignment 2 - Intermediate JS</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:500&display=swap" rel="stylesheet">
+	<style>
+		body {
+			background-color: #faf5f0;
+			font-family: 'Roboto', sans-serif;
+			color: #59524b;
+		}
+
+		h1 {
+			font-size: 28px;
+			text-align: center;
+		}
+
+		div {
+			width: 30%;
+			margin-left: 50px;
+			text-align: left;
+			background-color: #eee;
+			padding: 20px 30px;
+			border-radius: 8px;
+			min-height: 350px;
+		}
+
+		a {
+			color: darkorange;
+			text-decoration: none;
+			font-size: 22px;
+		}
+
+		a:hover {
+			color: #777;
+		}
+
+		img {
+			width: 110px;
+			height: auto;
+			float: left;
+			margin-right: 25px;
+
+		}
+
+		#date_container {
+			border: 1px solid black;
+			margin-left: 10px;
+			padding: 7px;
+			border-radius: 7px;
+		}
+
+  </style>
+</head>
+<body onload="printDate()">
+  <div>
+  	<span id="date_container"></span>
+	  <h1>Welcome to your profile<span id="profile"></span></h1>
+    <img src="user_pic.png">
+	  <p id="cookies_list"></p>
+	  <a href="#" onclick="return deleteCookies();">Delete Me</a>
+	  <p><a href="assignment2.html">Go Back</a></p>
+  </div>
+
+  <script>
+  	/*
+    Function runs after the page is loaded.
+    Prints date and time. 
+     */
+	  function printDate() {
+
+		  var today = new Date();
+
+			const months = [
+				'January',
+				'February',
+				'March',
+				'April',
+				'May',
+				'June',
+				'July',
+				'August',
+				'September',
+				'October',
+				'November',
+				'December'
+			];
+
+			const days = [
+				'Sunday',
+				'Monday',
+				'Tuesday',
+				'Wednesday',
+				'Thursday',
+				'Friday',
+				'Saturday'
+			];
+
+			var year = today.getFullYear();
+			var month = today.getMonth();
+			var full_month = months[month];  //assigns a months name according to the index
+			var day = today.getDay(); 
+			var week_day = days[day]; // assigns the day of week according to the index
+			var date = today.getDate();
+			var hour = today.getHours();
+			var minute = today.getMinutes();
+
+			if(hour > 12) {   //checks if PM or AM is needed
+				var hour = hour - 12;
+				var time = 'PM';
+			} else {
+				var time = 'AM';
+			}
+
+			if(minute < 10) {
+				minute = '0' + minute;
+			}
+
+			// Inserts the formated date and time into the HTML.
+		  document.getElementById('date_container').innerHTML = `${week_day}, ${date} ${full_month} ${year}  Time: ${hour}:${minute} ${time}`;
+		  return true;
+	  } //end of printDate() function
+
+	  var mycookies = document.cookie;
+	  var output = "<ul>";
+	  
+	 // creates an array with cookie pairs 'name=value'
+	  var cookie_array = mycookies.split(';');
+	  
+	 // accessing each pair of cookies separately and prints to the screen
+	  for(var i=0; i<cookie_array.length; i++) {
+	    name = cookie_array[i].split('=')[0];
+	    value = cookie_array[i].split('=')[1];  
+	    output += "<li>" + name + ": " + value + "</li>";
+	    var first_field = cookie_array[0];
+	    var user_name = first_field.substring(5); //extracting the value of name field
+	  }
+	  
+	  // printing information into HTML
+	  document.getElementById('cookies_list').innerHTML = output;
+	  document.getElementById('profile').innerHTML = ", " + user_name +"!";
+
+	  /*
+	  Function deletes all cookies when the link is clicked. 
+	   */
+	  function deleteCookies() {
+	  	var today = new Date();
+	    var expired = new Date(today.getTime() - 48 * 3600 * 1000); //in order to delete a cookie, we should set expiry time to be in past
+	  	for(var i=0; i<cookie_array.length; i++) { 
+	      name = cookie_array[i].split('=')[0];
+	      document.cookie=name + "=null; path=/; expires=" + expired.toGMTString();
+	  }
+	    location.reload(); //reloads the window
+	  }
+  </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Assignment 2 - Intermediate JS</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:500&display=swap" rel="stylesheet">
+	<style>
+
+		body {
+			background-color: #faf5f0;
+			font-family: 'Roboto', sans-serif;
+			color: #59524b;
+		}
+
+		h1 {
+			margin-left: 80px;
+			font-size: 28px;
+		}
+
+		div {
+			width: 30%;
+			margin-left: 50px;
+			text-align: left;
+			background-color: #eee;
+			padding: 20px 30px;
+			border-radius: 8px;
+		}
+
+		label {
+			display: block;
+			margin: 3px 0;
+			font-style: italic;
+		}
+
+		input, select {
+		  width: 100%;
+		  display: inline-block;
+		  border: 1px solid #bbb;
+		  border-radius: 4px;
+		  box-sizing: border-box;
+		  padding: 10px 15px;
+		  margin: 10px 0;
+		}
+
+		input[type=submit] {
+		  width: 100%;
+		  background-color: darkorange;
+		  color: #fff;
+		  cursor: pointer;
+		  padding: 10px 25px;
+		  margin: 7px 0;
+		  border: none;
+		  border-radius: 7px;
+		  font-size: 16px;
+		}
+
+		input[type=submit]:hover {
+		  opacity: 0.7;
+		}
+
+		span.required {
+			color: red;
+		}
+
+		h3 {
+			margin-left: 80px;
+			font-size: 17px;
+		}
+
+		a {
+			color: darkorange;
+			text-decoration: none;
+			font-size: 22px;
+		}
+
+		a:hover {
+			color: #777;
+		}
+
+		#date_container {
+			border: 1px solid black;
+			margin-left: 80px;
+			padding: 7px;
+			border-radius: 7px;
+		}
+  </style>
+</head>
+<body onload="printDate()">
+  <h1>Create your profile</h1>
+  <span id="date_container"></span>
+  <h3><span class="required">*</span> Required fields</h3>
+  <div id="form_container">
+
+	  <form onsubmit="return saveValues(this);" action="assignment2_1.html" id="main_form" name="main_form" method="get" novalidate target="assignment2_1.html">
+	    <label for="name">First Name <span class="required">*</span></label>
+	    <input type="text" id="name" name="name" placeholder="Your name">
+
+	    <label for="last_name">Last Name <span class="required">*</span></label>
+	    <input type="text" id="last_name" name="last_name" placeholder="Your last name">
+
+	    <label for="email_address">E-mail <span class="required">*</span></label>
+	    <input type="email" id="email_address" name="email_address" placeholder="example@gmail.com">
+
+	    <label for="phone">Telephone number <span class="required">*</span></label>
+	    <input type="tel" id="phone" name="phone" placeholder="Ex. 204-555-1212">
+
+	    <label for="postal">Postal Code <span class="required">*</span></label>
+	    <input type="text" id="postal" name="postal" placeholder="Ex. R3C1Y4">
+
+	    <label for="url">Full URL</label>
+	    <input type="text" id="url" name="url" placeholder="Start with http://">
+
+	    <label for="age">Your Age</label>
+	    <input type="text" id="age" name="age" placeholder="Your age"> <!-- type is text to check if for validation works -->
+
+	    <input type="submit" value="Submit" onclick="return formSubmit();">
+	  </form>
+	  <p><a href="assignment2_1.html">Go to your profile <span style="color: darkorange">	&#10132;</span></a></p>
+  </div>
+
+<script>
+
+	  /*
+	  Function runs when the form is submitted.
+	  It show an alert msg
+	   */
+    function formSubmit() {
+		  alert("Your profile was created!");
+    }
+
+    /*
+    Function runs after the page is loaded.
+    Prints date and time. 
+     */
+    function printDate() {
+		  var today = new Date();
+
+			const months = [
+				'January',
+				'February',
+				'March',
+				'April',
+				'May',
+				'June',
+				'July',
+				'August',
+				'September',
+				'October',
+				'November',
+				'December'
+			];
+
+			const days = [
+				'Sunday',
+				'Monday',
+				'Tuesday',
+				'Wednesday',
+				'Thursday',
+				'Friday',
+				'Saturday'
+			];
+
+			var year = today.getFullYear();
+			var month = today.getMonth();
+			var full_month = months[month]; //assigns a months name according to the index
+			var day = today.getDay(); 
+			var week_day = days[day]; // assigns the day of week according to the index
+			var date = today.getDate();
+			var hour = today.getHours();
+			var minute = today.getMinutes();
+
+			if (hour > 12) {  //checks if PM or AM is needed 
+				var hour = hour - 12;
+				var time = 'PM';
+			} else {
+				var time = 'AM';
+			}
+
+			if (minute < 10) {
+				minute = '0' + minute;
+			}
+
+      // Inserts the formated date and time into the HTML.
+		  document.getElementById('date_container').innerHTML = `${week_day}, ${date} ${full_month} ${year} Time: ${hour}:${minute} ${time}`;
+		  return true;
+	  } 
+	  //end of printDate() function
+
+    var today = new Date();
+	  var expiry = new Date(today.getTime() + 3600 * 1000 * 24 * 365 *2); // 365*2 gives us extra 2 years
+
+    /*
+    Function sets a cookie. 
+    Called multiple times inside of saveValues() funcion.
+    Converts a date to a string, using Internet Greenwich Mean Time (GMT) conventions.
+     */
+ 	  function setCookie(name, value) {
+	    document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString();
+	  }
+     
+    /*
+    Function runs when the form is submitted.
+    It saves the values submitted in a cookie.
+     */
+	  function saveValues(form) {
+	    setCookie("name", document.main_form.name.value);
+	    setCookie("last_name", document.main_form.last_name.value);
+	    setCookie("email", document.main_form.email_address.value);
+	    setCookie("phone", document.main_form.phone.value);
+	    setCookie("postal", document.main_form.postal.value);
+	    setCookie("url", document.main_form.url.value);
+	    setCookie("age", document.main_form.age.value);
+	    return true;
+	  }
+  </script>
+</body>
+</html>
